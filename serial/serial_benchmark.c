@@ -6,11 +6,11 @@
 void time_math_ops() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 5;
-  int *src1 = malloc(10 * sizeof(int));
-  int *src2 = malloc(10 * sizeof(int));
-  int *dst = malloc(10 * sizeof(int));
-  for (unsigned int i = 0; i < 10; i++) {
+  int len = 10000000;
+  int *src1 = malloc(len * sizeof(int));
+  int *src2 = malloc(len * sizeof(int));
+  int *dst = malloc(len * sizeof(int));
+  for (unsigned int i = 0; i < len; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
