@@ -27,6 +27,6 @@ void time_serial_add_int() {
 }
 
 int main() {
-    time_int_math_ops();
+    time_serial_add_int();
     return 0;
 }
