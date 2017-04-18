@@ -5,3 +5,27 @@ void vec_iadd_serial(int *dst, int *src1, int *src2, int len) {
     dst[i] = src1[i] + src2[i];
   }
 }
+
+void vec_add_float_serial(float *dst, float *src1, float *src2, int len) {
+    for(unsigned int i = 0; i < len; i++) {
+        dst[i] = src1[i] + src2[i];
+    }
+}
+
+void vec_mul_float_serial(float *dst, float *src1, float *src2, int len) {
+    for(unsigned int i = 0; i < len; i++) {
+        dst[i] = src1[i] * src2[i];
+    }
+}
+
+void vec_div_float_serial(float *dst, float *src1, float *src2, int len) {
+    for(unsigned int i = 0; i < len; i++) {
+        dst[i] = src1[i] / src2[i];
+    }
+}
+
+void vec_sub_float_serial(float *dst, float *src1, float *src2, int len) {
+    for(unsigned int i = 0; i < len; i++) {
+        dst[i] = src1[i] - src2[i];
+    }
+}
