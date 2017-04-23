@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "vec_math_serial.h"
+#include "vec_math_vector.h"
 
-void time_serial_add_int() {
+void time_vector_add_int() {
   clock_t start, end;
   double cpu_time_used;
   int len = 10000000;
@@ -16,7 +16,7 @@ void time_serial_add_int() {
     src2[i] = i - 5;
   }
   start = clock();
-  vec_add_int_serial(dst, src1, src2, len);
+  vec_add_int_vector(dst, src1, src2, len);
   end = clock();
   for (i = 0; i < len; i++) {
     if (dst[i] != (src1[i]) + (src2[i])) {
@@ -28,6 +28,6 @@ void time_serial_add_int() {
 }
 
 int main() {
-    time_serial_add_int();
+    time_vector_add_int();
     return 0;
 }
