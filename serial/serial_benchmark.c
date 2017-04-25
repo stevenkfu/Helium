@@ -210,7 +210,7 @@ void time_serial_mat2x2_mult_int() {
     }
   }
   start = clock();
-  for (i = 0; i < 10000000; i++) {
+  for (i = 0; i < 100000; i++) {
     mat2x2_mult_int_serial(dst, src1, src2);
   }
   if (dst[0*2+0] != 248 || dst[0*2+1] != 186 || dst[1*2+0] != 372 || dst[1*2+1] != 279) {
@@ -252,6 +252,52 @@ void time_serial_mat4x4_mult_int() {
   printf("Time elapsed for serial mat4x4 int mult: %f\n", cpu_time_used);
 }
 
+void time_serial_mat2x2_trans_int() {
+  clock_t start, end;
+  double cpu_time_used;
+  int len = 2;
+  int *src = malloc(len * len * sizeof(int*));
+  int *dst = malloc(len * len * sizeof(int*));
+  unsigned int i;
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < len; j++) {
+    for (k = 0; k < len; k++) {
+      src[j*2+k] = j+k;
+    }
+  }
+  start = clock();
+  for (i = 0; i < 1000000; i++) {
+    mat2x2_trans_int_serial(dst, src);
+  }
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for serial mat2x2 int trans: %f\n", cpu_time_used);
+}
+
+void time_serial_mat4x4_trans_int() {
+  clock_t start, end;
+  double cpu_time_used;
+  int len = 4;
+  int *src = malloc(len * len * sizeof(int*));
+  int *dst = malloc(len * len * sizeof(int*));
+  unsigned int i;
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < len; j++) {
+    for (k = 0; k < len; k++) {
+      src[j*4+k] = j+k;
+    }
+  }
+  start = clock();
+  for (i = 0; i < 1000000; i++) {
+    mat4x4_trans_int_serial(dst, src);
+  }
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for serial mat4x4 int trans: %f\n", cpu_time_used);
+}
+
 int main() {
     time_serial_add_int();
     time_serial_sub_int();
@@ -262,5 +308,7 @@ int main() {
     time_serial_div_float();
     time_serial_mat2x2_mult_int();
     time_serial_mat4x4_mult_int();
+    time_serial_mat2x2_trans_int();
+    time_serial_mat4x4_trans_int();
     return 0;
 }
