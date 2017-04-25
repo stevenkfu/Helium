@@ -43,7 +43,7 @@ void int_matrix_mul_4x4(int* prod, int* m1, int* m2){
     vst4q_s32(prod, result);
     return;
 }
-
+/*
 int main(){
     int m1[16];
     int m2[16];
@@ -72,3 +72,4 @@ int main(){
     }
     return 0;
 }
+*/

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "vec_math_vector.h"
+#include "vec_matrix_vector.h"
 
 void time_vector_add_int() {
   clock_t start, end;
@@ -192,6 +193,37 @@ void time_vector_div_float() {
   free(dst);
 }
 
+void time_vector_mat4x4_mult_int() {
+  clock_t start, end;
+  double cpu_time_used;
+  int len = 4;
+  int *src1 = malloc(len * len * sizeof(int*));
+  int *src2 = malloc(len * len * sizeof(int*));
+  int *dst = malloc(len * len * sizeof(int*));
+  unsigned int i;
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < len; j++) {
+    for (k = 0; k < len; k++) {
+      src1[j*4+k] = (j + 2) * (k - 5);
+      src2[j*4+k] = (j + 3) * (k - 4);
+    }
+  }
+  start = clock();
+  for (i = 0; i < 10000000; i++) {
+    int_matrix_mul_4x4(dst, src1, src2);
+  }
+  end = clock();
+  if (dst[0*4+0] != 464 || dst[0*4+1] != 348 || dst[0*4+2] != 232 || dst[0*4+3] != 116 ||
+      dst[1*4+0] != 696 || dst[1*4+1] != 522 || dst[1*4+2] != 348 || dst[1*4+3] != 174 ||
+      dst[2*4+0] != 928 || dst[2*4+1] != 696 || dst[2*4+2] != 464 || dst[2*4+3] != 232 ||
+      dst[3*4+0] != 1160 || dst[3*4+1] != 870 || dst[3*4+2] != 580 || dst[3*4+3] != 290) {
+    printf("Matrix multiply 4x4 ints returned incorrect result\n");
+  }
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for vector mat4x4 int mult: %f\n", cpu_time_used);
+}
+
 int main() {
     time_vector_add_int();
     time_vector_sub_int();
@@ -199,5 +231,6 @@ int main() {
     time_vector_add_float();
     time_vector_sub_float();
     time_vector_mul_float();
+    time_vector_mat4x4_mult_int();
     return 0;
 }
