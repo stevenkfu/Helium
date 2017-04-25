@@ -238,7 +238,7 @@ void time_serial_mat4x4_mult_int() {
     }
   }
   start = clock();
-  for (i = 0; i < 10000000; i++) {
+  for (i = 0; i < 100000; i++) {
     mat4x4_mult_int_serial(dst, src1, src2);
   }
   end = clock();

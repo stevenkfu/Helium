@@ -210,7 +210,7 @@ void time_vector_mat4x4_mult_int() {
     }
   }
   start = clock();
-  for (i = 0; i < 10000000; i++) {
+  for (i = 0; i < 100000; i++) {
     int_matrix_mul_4x4(dst, src1, src2);
   }
   end = clock();
