@@ -74,6 +74,7 @@ At the parallelism competition, we plan to show some graphs of performance of ou
 ### Preliminary results:
 
 ![intadd](/images/intadd.png)
+<img src="/images/intadd.png" width="200">
 
 At this point it is mostly a matter of coding and doing the work; however, one thing that may pose a significant challenge is integrating our work into an Android application, as we have no background knowledge in this and have no experience adding a library written in C to an Android application. Another possible difficulty is deciding on what application to write that will effectively utilize the vector and matrix operations that we have written, although graphics transforms are a direct application of 4x4 matrix multiplication. Finally, especially after measuring the speedup of our matrix multiplication algorithm, it may be difficult to achieve significant speedups over the sequential algorithm without embedding assembly in our code. 
 
