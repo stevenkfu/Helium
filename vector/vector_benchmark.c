@@ -247,6 +247,41 @@ void time_vector_mat2x2_mult_int() {
   printf("Time elapsed for serial mat2x2 int mult: %f\n", cpu_time_used);
 }
 
+void time_vector_mat4x4_trans_int() {
+  clock_t start, end;
+  double cpu_time_used;
+  int len = 4;
+  int *src = malloc(len * len * sizeof(int*));
+  int *dst = malloc(len * len * sizeof(int*));
+  unsigned int i;
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < len; j++) {
+    for (k = 0; k < len; k++) {
+      src[j*4+k] = 4*j+k;
+    }
+  }
+  start = clock();
+  for (i = 0; i < LEN; i++) {
+    mat4x4_trans_int_vector(dst, src);
+  }
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for serial mat4x4 int trans: %f\n", cpu_time_used);
+  for(i = 0; i < 4; i++){
+    for(j = 0; j < 4; j++){
+      printf("%d ",src[4*i+j]);
+    }
+    printf("\n");
+  }
+  for(i = 0; i < 4; i++){
+    for(j = 0; j < 4; j++){
+      printf("%d ",dst[4*i+j]);
+    }
+    printf("\n");
+  }
+}
+
 int main() {
     time_vector_add_int();
     time_vector_sub_int();
@@ -256,5 +291,6 @@ int main() {
     time_vector_mul_float();
     time_vector_mat2x2_mult_int();
     time_vector_mat4x4_mult_int();
+    time_vector_mat4x4_trans_int();
     return 0;
 }

@@ -4,7 +4,7 @@
 #include "vec_math_serial.h"
 #include "mat_math_serial.h"
 
-#define LEN 100000
+#define LEN 10000000
 
 void time_serial_add_int() {
   clock_t start, end;
@@ -205,11 +205,7 @@ void time_serial_mat2x2_mult_int() {
     }
   }
   start = clock();
-<<<<<<< HEAD
   for (i = 0; i < LEN; i++) {
-=======
-  for (i = 0; i < 100000; i++) {
->>>>>>> 8f446a389e00eddccf4e5b32c75f44db01639286
     mat2x2_mult_int_serial(dst, src1, src2);
   }
   if (dst[0*2+0] != 248 || dst[0*2+1] != 186 || dst[1*2+0] != 372 || dst[1*2+1] != 279) {
@@ -266,7 +262,7 @@ void time_serial_mat2x2_trans_int() {
     }
   }
   start = clock();
-  for (i = 0; i < 1000000; i++) {
+  for (i = 0; i < LEN; i++) {
     mat2x2_trans_int_serial(dst, src);
   }
   end = clock();
@@ -289,7 +285,7 @@ void time_serial_mat4x4_trans_int() {
     }
   }
   start = clock();
-  for (i = 0; i < 1000000; i++) {
+  for (i = 0; i < LEN; i++) {
     mat4x4_trans_int_serial(dst, src);
   }
   end = clock();

@@ -42,6 +42,16 @@ void int_matrix_mul_4x4(int* prod, int* m1, int* m2){
     vst4q_s32(prod, result);
     return;
 }
+
+void mat4x4_trans_int_vector(int* trans, int* m){
+    int i;
+    int32x4x4_t vec;
+    vec = vld4q_s32(m);
+    for(i = 0; i < 4; i++){
+        vst1q_s32(trans+4*i, vec.val[i]);
+    }
+    return;
+}
 /*
 void int_matrix_mul_4x4_v2(int* prod, int* m1, int* m2){
     
@@ -65,7 +75,7 @@ void int_matrix_mul_4x4_v2(int* prod, int* m1, int* m2){
     vst4q_s32(prod, result);
     return;
 }
-
+*
 int main(){
     int m1[16];
     int m2[16];
@@ -92,9 +102,15 @@ int main(){
         printf("%d ", result2[i]);
         if(i % 2 == 1) printf("\n");
     }
-    int32x4_t test = vld1q_s32(m1);
-    int sum = vqadd_s32(test,test);
-    printf("%d\n", sum);
+    int m5[16];
+    for(i = 0; i < 16; i++){
+        m5[i] = i;
+    }
+    mat4x4_trans_int_vector(result, m5);
+    for(i = 0; i < 16; i++){
+        printf("%d ", result[i]);
+        if(i % 4 == 3) printf("\n");
+    }
     return 0;
 }
 */
