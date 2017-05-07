@@ -214,6 +214,9 @@ void time_serial_mat2x2_mult_int() {
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("Time elapsed for serial mat2x2 int mult: %f\n", cpu_time_used);
+  free(src1);
+  free(src2);
+  free(dst);
 }
 
 void time_serial_mat4x4_mult_int() {
@@ -245,6 +248,9 @@ void time_serial_mat4x4_mult_int() {
   }
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("Time elapsed for serial mat4x4 int mult: %f\n", cpu_time_used);
+  free(src1);
+  free(src2);
+  free(dst);
 }
 
 void time_serial_mat2x2_trans_int() {
@@ -268,6 +274,8 @@ void time_serial_mat2x2_trans_int() {
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("Time elapsed for serial mat2x2 int trans: %f\n", cpu_time_used);
+  free(src);
+  free(dst);
 }
 
 void time_serial_mat4x4_trans_int() {
@@ -291,6 +299,8 @@ void time_serial_mat4x4_trans_int() {
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("Time elapsed for serial mat4x4 int trans: %f\n", cpu_time_used);
+  free(src);
+  free(dst);
 }
 
 void time_serial_mat2x2_det_int() {
@@ -314,6 +324,7 @@ void time_serial_mat2x2_det_int() {
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("Time elapsed for serial mat2x2 int det: %f\n", cpu_time_used);
+  free(src);
 }
 
 void time_serial_mat2x2_inv_float() {
@@ -346,7 +357,7 @@ void time_serial_mat4x4_det_int() {
   double cpu_time_used;
   int len = 4;
   int *src = malloc(len * len * sizeof(int*));
-  int *det = malloc(sizeof(int*));
+  int det;
   unsigned int i;
   unsigned int j;
   unsigned int k;
@@ -361,11 +372,12 @@ void time_serial_mat4x4_det_int() {
   src[8] = 10;
   start = clock();
   for (i = 0; i < LEN; i++) {
-    int_matrix_det_4x4(det, src);
+    int_matrix_det_4x4(&det, src);
   }
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("Time elapsed for serial mat4x4 int det: %f\n", cpu_time_used);
+  free(src);
 }
 
 int main() {
