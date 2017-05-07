@@ -244,7 +244,10 @@ void time_vector_mat2x2_mult_int() {
   }
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-  printf("Time elapsed for serial mat2x2 int mult: %f\n", cpu_time_used);
+  printf("Time elapsed for vector mat2x2 int mult: %f\n", cpu_time_used);
+  free(src1);
+  free(src2);
+  free(dst);
 }
 
 void time_vector_mat4x4_trans_int() {
@@ -267,19 +270,38 @@ void time_vector_mat4x4_trans_int() {
   }
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-  printf("Time elapsed for serial mat4x4 int trans: %f\n", cpu_time_used);
-  for(i = 0; i < 4; i++){
-    for(j = 0; j < 4; j++){
-      printf("%d ",src[4*i+j]);
+  printf("Time elapsed for vector mat4x4 int trans: %f\n", cpu_time_used);
+  free(src);
+  free(dst);
+}
+
+void time_vector_mat4x4_det_int() {
+  clock_t start, end;
+  double cpu_time_used;
+  int len = 4;
+  int *src = malloc(len * len * sizeof(int*));
+  int det;
+  unsigned int i;
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < len; j++) {
+    for (k = 0; k < len; k++) {
+      src[j*4+k] = j*4+k + 1;
     }
-    printf("\n");
   }
-  for(i = 0; i < 4; i++){
-    for(j = 0; j < 4; j++){
-      printf("%d ",dst[4*i+j]);
-    }
-    printf("\n");
+  src[0] = 10;
+  src[1] = 9;
+  src[2] = 10;
+  src[8] = 10;
+  start = clock();
+  for (i = 0; i < LEN; i++) {
+    vector_matrix_det_4x4(&det, src);
   }
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for vector mat4x4 int det: %f\n", cpu_time_used);
+  printf("determinant: %d\n", det);
+  free(src);
 }
 
 int main() {
@@ -292,5 +314,6 @@ int main() {
     time_vector_mat2x2_mult_int();
     time_vector_mat4x4_mult_int();
     time_vector_mat4x4_trans_int();
+    time_vector_mat4x4_det_int();
     return 0;
 }
