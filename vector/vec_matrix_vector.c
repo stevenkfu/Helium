@@ -53,7 +53,7 @@ void mat4x4_trans_int_vector(int* trans, int* m){
     return;
 }
 
-void mat4x4_determinant_int_vector(int* determinant, int* m){
+void vector_matrix_det_4x4(int* determinant, int* m){
     //first find 3x3 determinants 
     int32x4_t sub_3x3;
     int32x4_t firstRow = vld1q_s32(m);
@@ -117,7 +117,7 @@ void int_matrix_mul_4x4_v2(int* prod, int* m1, int* m2){
     vst4q_s32(prod, result);
     return;
 }
-*/
+*
 int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
     int m[16];
     m[0] = 5;
@@ -141,3 +141,4 @@ int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
     printf("%d\n", determinant);
     return 0;
 }
+*/
