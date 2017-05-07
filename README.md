@@ -48,3 +48,35 @@ Continue optimizing operations and begin identifying how to link and compile our
 
 #### 4/30 - 5/6:
 Write algorithms and an Android application that use our library to implement features such as image or signal processing.
+
+## Checkpoint
+### Work Completed:
+- Serial and vector versions of 1xn vector addition, subtraction, multiplication
+- Serial and vector versions of 2x2 and 4x4 matrix multiplication
+- Serial versions of 2x2 and 4x4 matrix transpose, inverse, and multiply
+- Benchmarking platform for timing both serial and vector functions.
+
+#### 4/26.5 - 4/29: 
+Finish writing matrix operations, including determinant and inverse in both serial (Steven) and vector (Christopher), study for exam (Steven & Christopher)
+#### 4/30 - 5/3.5: 
+Benchmark against existing Neon implementations (Steven) and improve our vector implementations (Christopher)
+#### 5/3.5 - 5/06: 
+Begin looking into how to use our library in an android app (Christopher), begin planning an application that will use some of the features we implemented (Steven)
+#### 5/07 - 5/12: 
+Finish app (Steven & Christopher) and compare performance between vector library and serial library (Christopher & Steven).
+
+### Work completed so far:
+We first had to learn how to set up an environment to be able to compile our code. We decided on using a Raspberry Pi to run our code because it comes with an ARMv7 processor that supports the Neon instruction set we are using. After that, we had to learn how to write a makefile that would compile and link the source code located in multiple files. Once we had the framework to compile our code set up, we could begin writing a benchmark suite and our library functions
+	For our library functions, we started by writing the serial versions of add, subtract, and multiply and then wrote the vector versions of those functions. In our preliminary benchmarks, we saw a 50% speedup with vectors of width 4 for those 3 functions. We then moved on to matrix operations, starting with multiplication of 2x2 and 4x4 matrices (because Neon does not have native support for scatter and gather type operations with a stride length of more than 4). However, we were unable to get significant speedups with the 4x4 vector implementation over the serial one, so we will be looking into that as well as continuing to add more matrix functions to our library. 
+
+At the parallelism competition, we plan to show some graphs of performance of our implementation of operations compared to serial versions and other libraries that use Neon. These will include graphs comparing basic operations on vectors and matrices, as well as the full application so that situations more reflective of real-world utilization can be compared. 
+
+### Preliminary results:
+
+<img src="/images/intadd.png" width="400"><img src="/images/floatadd.png" width="400">
+<img src="/images/intsub.png" width="400"><img src="/images/floatsub.png" width="400">
+<img src="/images/intmul.png" width="400"><img src="/images/floatmul.png" width="400">
+<img src="/images/4x4matmul.png" width="400">
+
+At this point it is mostly a matter of coding and doing the work; however, one thing that may pose a significant challenge is integrating our work into an Android application, as we have no background knowledge in this and have no experience adding a library written in C to an Android application. Another possible difficulty is deciding on what application to write that will effectively utilize the vector and matrix operations that we have written, although graphics transforms are a direct application of 4x4 matrix multiplication. Finally, especially after measuring the speedup of our matrix multiplication algorithm, it may be difficult to achieve significant speedups over the sequential algorithm without embedding assembly in our code. 
+
