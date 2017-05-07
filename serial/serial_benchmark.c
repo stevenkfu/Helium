@@ -4,22 +4,23 @@
 #include "vec_math_serial.h"
 #include "mat_math_serial.h"
 
+#define LEN 100000
+
 void time_serial_add_int() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  int *src1 = malloc(len * sizeof(int));
-  int *src2 = malloc(len * sizeof(int));
-  int *dst = malloc(len * sizeof(int));
+  int *src1 = malloc(LEN * sizeof(int));
+  int *src2 = malloc(LEN * sizeof(int));
+  int *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_add_int_serial(dst, src1, src2, len);
+  vec_add_int_serial(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) + (src2[i])) {
       printf("Error: serial int add failed at index %d\n", i);
     }
@@ -34,19 +35,18 @@ void time_serial_add_int() {
 void time_serial_sub_int() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  int *src1 = malloc(len * sizeof(int));
-  int *src2 = malloc(len * sizeof(int));
-  int *dst = malloc(len * sizeof(int));
+  int *src1 = malloc(LEN * sizeof(int));
+  int *src2 = malloc(LEN * sizeof(int));
+  int *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_sub_int_serial(dst, src1, src2, len);
+  vec_sub_int_serial(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) - (src2[i])) {
       printf("Error: serial int sub failed at index %d\n", i);
     }
@@ -61,19 +61,18 @@ void time_serial_sub_int() {
 void time_serial_mul_int() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  int *src1 = malloc(len * sizeof(int));
-  int *src2 = malloc(len * sizeof(int));
-  int *dst = malloc(len * sizeof(int));
+  int *src1 = malloc(LEN * sizeof(int));
+  int *src2 = malloc(LEN * sizeof(int));
+  int *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_mul_int_serial(dst, src1, src2, len);
+  vec_mul_int_serial(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) * (src2[i])) {
       printf("Error: serial int mul failed at index %d\n", i);
     }
@@ -88,19 +87,18 @@ void time_serial_mul_int() {
 void time_serial_add_float() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  float *src1 = malloc(len * sizeof(int));
-  float *src2 = malloc(len * sizeof(int));
-  float *dst = malloc(len * sizeof(int));
+  float *src1 = malloc(LEN * sizeof(int));
+  float *src2 = malloc(LEN * sizeof(int));
+  float *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_add_float_serial(dst, src1, src2, len);
+  vec_add_float_serial(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) + (src2[i])) {
       printf("Error: serial float add failed at index %d\n", i);
     }
@@ -115,19 +113,18 @@ void time_serial_add_float() {
 void time_serial_sub_float() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  float *src1 = malloc(len * sizeof(int));
-  float *src2 = malloc(len * sizeof(int));
-  float *dst = malloc(len * sizeof(int));
+  float *src1 = malloc(LEN * sizeof(int));
+  float *src2 = malloc(LEN * sizeof(int));
+  float *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_sub_float_serial(dst, src1, src2, len);
+  vec_sub_float_serial(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) - (src2[i])) {
       printf("Error: serial float sub failed at index %d\n", i);
     }
@@ -142,19 +139,18 @@ void time_serial_sub_float() {
 void time_serial_mul_float() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  float *src1 = malloc(len * sizeof(int));
-  float *src2 = malloc(len * sizeof(int));
-  float *dst = malloc(len * sizeof(int));
+  float *src1 = malloc(LEN * sizeof(int));
+  float *src2 = malloc(LEN * sizeof(int));
+  float *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_mul_float_serial(dst, src1, src2, len);
+  vec_mul_float_serial(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) * (src2[i])) {
       printf("Error: serial float mul failed at index %d\n", i);
     }
@@ -169,25 +165,24 @@ void time_serial_mul_float() {
 void time_serial_div_float() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  float *src1 = malloc(len * sizeof(int));
-  float *src2 = malloc(len * sizeof(int));
-  float *dst = malloc(len * sizeof(int));
+  float *src1 = malloc(LEN * sizeof(int));
+  float *src2 = malloc(LEN * sizeof(int));
+  float *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i + 5;
   }
   start = clock();
-  vec_div_float_serial(dst, src1, src2, len);
+  vec_div_float_serial(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) / (src2[i])) {
       printf("Error: serial int add failed at index %d\n", i);
     }
   }
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-  printf("Time elapsed for serial int add: %f\n", cpu_time_used);
+  printf("Time elapsed for serial float div: %f\n", cpu_time_used);
   free(src1);
   free(src2);
   free(dst);
@@ -210,7 +205,7 @@ void time_serial_mat2x2_mult_int() {
     }
   }
   start = clock();
-  for (i = 0; i < 10000000; i++) {
+  for (i = 0; i < LEN; i++) {
     mat2x2_mult_int_serial(dst, src1, src2);
   }
   if (dst[0*2+0] != 248 || dst[0*2+1] != 186 || dst[1*2+0] != 372 || dst[1*2+1] != 279) {
@@ -238,7 +233,7 @@ void time_serial_mat4x4_mult_int() {
     }
   }
   start = clock();
-  for (i = 0; i < 100000; i++) {
+  for (i = 0; i < LEN; i++) {
     mat4x4_mult_int_serial(dst, src1, src2);
   }
   end = clock();

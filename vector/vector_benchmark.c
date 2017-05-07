@@ -4,22 +4,23 @@
 #include "vec_math_vector.h"
 #include "vec_matrix_vector.h"
 
+#define LEN 10000000
+
 void time_vector_add_int() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  int *src1 = malloc(len * sizeof(int));
-  int *src2 = malloc(len * sizeof(int));
-  int *dst = malloc(len * sizeof(int));
+  int *src1 = malloc(LEN * sizeof(int));
+  int *src2 = malloc(LEN * sizeof(int));
+  int *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_add_int_vector(dst, src1, src2, len);
+  vec_add_int_vector(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) + (src2[i])) {
       printf("Error: vector int add failed at index %d\n", i);
     }
@@ -34,19 +35,18 @@ void time_vector_add_int() {
 void time_vector_sub_int() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  int *src1 = malloc(len * sizeof(int));
-  int *src2 = malloc(len * sizeof(int));
-  int *dst = malloc(len * sizeof(int));
+  int *src1 = malloc(LEN * sizeof(int));
+  int *src2 = malloc(LEN * sizeof(int));
+  int *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_sub_int_vector(dst, src1, src2, len);
+  vec_sub_int_vector(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) - (src2[i])) {
       printf("Error: vector int sub failed at index %d\n", i);
     }
@@ -61,19 +61,18 @@ void time_vector_sub_int() {
 void time_vector_mul_int() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  int *src1 = malloc(len * sizeof(int));
-  int *src2 = malloc(len * sizeof(int));
-  int *dst = malloc(len * sizeof(int));
+  int *src1 = malloc(LEN * sizeof(int));
+  int *src2 = malloc(LEN * sizeof(int));
+  int *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_mul_int_vector(dst, src1, src2, len);
+  vec_mul_int_vector(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) * (src2[i])) {
       printf("Error: vector int mul failed at index %d\n", i);
     }
@@ -88,19 +87,18 @@ void time_vector_mul_int() {
 void time_vector_add_float() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  float *src1 = malloc(len * sizeof(int));
-  float *src2 = malloc(len * sizeof(int));
-  float *dst = malloc(len * sizeof(int));
+  float *src1 = malloc(LEN * sizeof(int));
+  float *src2 = malloc(LEN * sizeof(int));
+  float *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_add_float_vector(dst, src1, src2, len);
+  vec_add_float_vector(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) + (src2[i])) {
       printf("Error: vector float add failed at index %d\n", i);
     }
@@ -115,19 +113,18 @@ void time_vector_add_float() {
 void time_vector_sub_float() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  float *src1 = malloc(len * sizeof(int));
-  float *src2 = malloc(len * sizeof(int));
-  float *dst = malloc(len * sizeof(int));
+  float *src1 = malloc(LEN * sizeof(int));
+  float *src2 = malloc(LEN * sizeof(int));
+  float *dst = malloc(LEN * sizeof(int));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = i * 2;
     src2[i] = i - 5;
   }
   start = clock();
-  vec_sub_float_vector(dst, src1, src2, len);
+  vec_sub_float_vector(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) - (src2[i])) {
       printf("Error: vector float sub failed at index %d\n", i);
     }
@@ -142,19 +139,18 @@ void time_vector_sub_float() {
 void time_vector_mul_float() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  float *src1 = malloc(len * sizeof(float));
-  float *src2 = malloc(len * sizeof(float));
-  float *dst = malloc(len * sizeof(float));
+  float *src1 = malloc(LEN * sizeof(float));
+  float *src2 = malloc(LEN * sizeof(float));
+  float *dst = malloc(LEN * sizeof(float));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = (float)i * 2;
     src2[i] = (float)i - 5;
   }
   start = clock();
-  vec_mul_float_vector(dst, src1, src2, len);
+  vec_mul_float_vector(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] != (src1[i]) * (src2[i])) {
       printf("Error: vector float mul failed at index %d\n", i);
     }
@@ -169,19 +165,18 @@ void time_vector_mul_float() {
 void time_vector_div_float() {
   clock_t start, end;
   double cpu_time_used;
-  int len = 10000000;
-  float *src1 = malloc(len * sizeof(float));
-  float *src2 = malloc(len * sizeof(float));
-  float *dst = malloc(len * sizeof(float));
+  float *src1 = malloc(LEN * sizeof(float));
+  float *src2 = malloc(LEN * sizeof(float));
+  float *dst = malloc(LEN * sizeof(float));
   unsigned int i;
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     src1[i] = (float)i * 2;
     src2[i] = (float)i + 5;
   }
   start = clock();
-  vec_div_float_vector(dst, src1, src2, len);
+  vec_div_float_vector(dst, src1, src2, LEN);
   end = clock();
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < LEN; i++) {
     if (dst[i] - (src1[i]) / (src2[i]) > 0.0001) {
       printf("Error: vector float div failed at index %d\n%f vs %f \n", i, dst[i], src1[i]/src2[i]);
     }
@@ -210,7 +205,7 @@ void time_vector_mat4x4_mult_int() {
     }
   }
   start = clock();
-  for (i = 0; i < 100000; i++) {
+  for (i = 0; i < LEN; i++) {
     int_matrix_mul_4x4(dst, src1, src2);
   }
   end = clock();
@@ -224,6 +219,34 @@ void time_vector_mat4x4_mult_int() {
   printf("Time elapsed for vector mat4x4 int mult: %f\n", cpu_time_used);
 }
 
+void time_vector_mat2x2_mult_int() {
+  clock_t start, end;
+  double cpu_time_used;
+  int len = 2;
+  int *src1 = malloc(len * len * sizeof(int*));
+  int *src2 = malloc(len * len * sizeof(int*));
+  int *dst = malloc(len * len * sizeof(int*));
+  unsigned int i;
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < len; j++) {
+    for (k = 0; k < len; k++) {
+      src1[j*2+k] = (j + 2) * (k - 5);
+      src2[j*2+k] = (j + 3) * (k - 4);
+    }
+  }
+  start = clock();
+  for (i = 0; i < LEN; i++) {
+    int_matrix_mul_2x2(dst, src1, src2);
+  }
+  if (dst[0*2+0] != 248 || dst[0*2+1] != 186 || dst[1*2+0] != 372 || dst[1*2+1] != 279) {
+    printf("Matrix multiply 2x2 ints returned incorrect result\n");
+  }
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for serial mat2x2 int mult: %f\n", cpu_time_used);
+}
+
 int main() {
     time_vector_add_int();
     time_vector_sub_int();
@@ -231,6 +254,7 @@ int main() {
     time_vector_add_float();
     time_vector_sub_float();
     time_vector_mul_float();
+    time_vector_mat2x2_mult_int();
     time_vector_mat4x4_mult_int();
     return 0;
 }

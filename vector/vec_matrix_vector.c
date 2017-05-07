@@ -6,16 +6,15 @@ void int_matrix_mul_2x2(int* prod, int* m1, int* m2){
     
     int i;
     int32x2x2_t vec1;
-    int32x2_t vec2_part;
+    int32x2x2_t vec2;
     int32x2x2_t result;
     vec1 = vld2_s32(m1);
+    vec2 = vld2_s32(m2);
     for(i = 0; i < 2; i++){
         int j;
         result.val[i] = vdup_n_s32(0);
-            vec2_part = vld1_s32(m2+i);
-            result.val[i] = vmla_lane_s32(result.val[i], vec1.val[0], vec2_part, 0);
-            vec2_part = vld1_s32(m2+i+2);
-            result.val[i] = vmla_lane_s32(result.val[i], vec1.val[1], vec2_part, 0);
+            result.val[i] = vmla_lane_s32(result.val[i], vec1.val[0], vec2.val[i], 0);
+            result.val[i] = vmla_lane_s32(result.val[i], vec1.val[1], vec2.val[i], 1);
     }
     vst2_s32(prod, result);
     return;
@@ -43,7 +42,7 @@ void int_matrix_mul_4x4(int* prod, int* m1, int* m2){
     vst4q_s32(prod, result);
     return;
 }
-
+/*
 void int_matrix_mul_4x4_v2(int* prod, int* m1, int* m2){
     
     int i;
@@ -98,4 +97,4 @@ int main(){
     printf("%d\n", sum);
     return 0;
 }
-
+*/
