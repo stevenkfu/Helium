@@ -7,3 +7,5 @@ void int_matrix_det_2x2(int* det, int* m);
 int mat2x2_inv_float_serial(float *dst, float *src);
 void int_matrix_det_4x4(int *det, int *m);
 void int_matrix_det_4x4_block(float *det, int *m);
+void matmxn_trans_int_serial_cache(int *dst, int *src, int rows, int cols, int rb, int re, int cb, int ce);
+void matmxn_trans_int_serial(int *dst, int *src, int rows, int cols);

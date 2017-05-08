@@ -88,3 +88,40 @@ void int_matrix_det_4x4(int *det, int *m) {
          m[2] * m[7] * a - m[3] * m[4] * d + m[3] * m[5] * b - m[3] * m[6] * a;
   return;
 }
+
+// Credits to http://stackoverflow.com/a/28027063
+void matmxn_trans_int_serial_cache(int *dst, int *src, int rows, int cols, int rb, int re, int cb, int ce) {
+  int r = re - rb;
+  int c = ce - cb;
+  int i, j;
+  if (r <= 16 && c <= 16) {
+    for (i = rb; i < re; i++) {
+      for (j = cb; j < ce; j++) {
+        dst[j * rows + i] = src[i * cols + j];
+      }
+    }
+  }
+  else if (r >= c) {
+    matmxn_trans_int_serial_cache(dst, src, rows, cols, rb, rb + (r / 2), cb, ce);
+    matmxn_trans_int_serial_cache(dst, src, rows, cols, rb + (r / 2), re, cb, ce);
+  }
+  else {
+    matmxn_trans_int_serial_cache(dst, src, rows, cols, rb, re, cb, cb + (c / 2));
+    matmxn_trans_int_serial_cache(dst, src, rows, cols, rb, re, cb + (c / 2), ce);
+  }
+}
+
+//don't use, slower than above
+void matmxn_trans_int_serial(int *dst, int *src, int rows, int cols) {
+  int i, j, k, l;
+  int blocksize = 256;
+  for (i = 0; i < rows; i += blocksize) {
+    for (j = 0; j < cols; j += blocksize) {
+      for (k = i; k < rows && k < i + blocksize; k++) {
+        for (l = j; l < cols && l < j + blocksize; l++) {
+          dst[k * cols + l] = src[l * rows + k];
+        }
+      }
+    }
+  }
+}

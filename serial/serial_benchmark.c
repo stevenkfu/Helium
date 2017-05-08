@@ -397,6 +397,100 @@ void time_serial_mat4x4_det_int() {
   free(src);
 }
 
+void time_serial_matmxn_trans_int_cache() {
+  clock_t start, end;
+  double cpu_time_used;
+  int rows = 2000;
+  int cols = 1400;
+  int *src = malloc(rows * cols * sizeof(int*));
+  int *dst = malloc(cols * rows * sizeof(int*));
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < rows; j++) {
+    for (k = 0; k < cols; k++) {
+      src[j*cols+k] = 2*j+3*k;
+    }
+  }
+  /*
+  printf("before\n");
+  for (j = 0; j < rows; j++) {
+    for (k = 0; k < cols; k++) {
+      printf("%d ", src[j*cols+k]);
+    }
+    printf("\n");
+  }
+  */
+  start = clock();
+  matmxn_trans_int_serial_cache(dst, src, rows, cols, 0, rows, 0, cols);
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for serial matmxn int trans cache: %f\n", cpu_time_used);
+  /*
+  for (j = 0; j < cols; j++) {
+    for (k = 0; k < rows; k++) {
+      printf("%d ", dst[j*rows+k]);
+    }
+    printf("\n");
+  }
+  */
+  for (j = 0; j < cols; j++) {
+    for (k = 0; k < rows; k++) {
+      if (dst[j*rows+k] != src[k*cols+j]) {
+        printf("********ERROR*********\n");
+      }
+    }
+  }
+  free(src);
+  free(dst);
+}
+
+void time_serial_matmxn_trans_int() {
+  clock_t start, end;
+  double cpu_time_used;
+  int rows = 2000;
+  int cols = 1600;
+  int *src = malloc(rows * cols * sizeof(int*));
+  int *dst = malloc(cols * rows * sizeof(int*));
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < rows; j++) {
+    for (k = 0; k < cols; k++) {
+      src[j*cols+k] = 2*j+3*k;
+    }
+  }
+  /*
+  printf("before\n");
+  for (j = 0; j < rows; j++) {
+    for (k = 0; k < cols; k++) {
+      printf("%d ", src[j*cols+k]);
+    }
+    printf("\n");
+  }
+  */
+  start = clock();
+  matmxn_trans_int_serial(dst, src, cols, rows);
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for serial matmxn int trans: %f\n", cpu_time_used);
+  /*
+  for (j = 0; j < cols; j++) {
+    for (k = 0; k < rows; k++) {
+      printf("%d ", dst[j*rows + k]);
+    }
+    printf("\n");
+  }
+  */
+  for (j = 0; j < cols; j++) {
+    for (k = 0; k < rows; k++) {
+      if (dst[j*rows+k] != src[k*cols+j]) {
+        printf("********ERROR*********\n");
+      }
+    }
+  }
+  free(src);
+  free(dst);
+}
+
 int main() {
     time_serial_add_int();
     time_serial_sub_int();
@@ -413,5 +507,7 @@ int main() {
     time_serial_mat2x2_det_int();
     time_serial_mat2x2_inv_float();
     time_serial_mat4x4_det_int();
+    time_serial_matmxn_trans_int_cache();
+    time_serial_matmxn_trans_int();
     return 0;
 }
