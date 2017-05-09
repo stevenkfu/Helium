@@ -197,6 +197,7 @@ void int_matrix_mul(int* dst, int* m1, int* m2, int m, int n, int o){
     int* transposed_m2 = malloc(sizeof(int) * n * o);
     matmxn_trans_int_serial_cache(transposed_m2, m2, n, o, 0, n, 0, o);
     int_matrix_mul_helper(dst, m1, transposed_m2, m, n, o, 0, m, 0, n, 0, n, 0, o);
+    free(transposed_m2);
 }
 /*
 #define M 5
