@@ -304,7 +304,30 @@ void time_vector_mat4x4_det_int() {
   free(src);
 }
 
+void time_vector_dotproduct_int() {
+  clock_t start, end;
+  double cpu_time_used;
+  int *src1 = malloc(LEN * sizeof(int));
+  int *src2 = malloc(LEN * sizeof(int));
+  int i;
+  for(i = 0; i < LEN; i++){
+    src1[i] = i;
+    src2[i] = i+1;
+  }
+  printf("starting\n");
+  int result;
+  start = clock();
+  int_dotprod(&result, src1,src2, LEN);
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for vector dotproduct int: %f\n", cpu_time_used);
+  printf("result: %d\n", result);
+  free(src1);
+  free(src2);
+}
+
 int main() {
+    /*
     time_vector_add_int();
     time_vector_sub_int();
     time_vector_mul_int();
@@ -315,5 +338,7 @@ int main() {
     time_vector_mat4x4_mult_int();
     time_vector_mat4x4_trans_int();
     time_vector_mat4x4_det_int();
+    */
+    time_vector_dotproduct_int();
     return 0;
 }
