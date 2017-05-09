@@ -225,3 +225,16 @@ void mat_mult_int_serial_trans(int *dst, int *src1, int *src2, int s1r, int s1c,
   }
   */
 }
+
+void mat_mult_int_serial_naive(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c) {
+  int i, j, k;
+  for (i = 0; i < s1r; i++) {
+    for (j = 0; j < s2c; j++) {
+      int sum = 0;
+      for (k = 0; k < s1c; k++) {
+        sum += src1[i*s1c+k] * src2[k*s2c+j];
+      }
+      dst[i*s2c+j] = sum;
+    }
+  }
+}

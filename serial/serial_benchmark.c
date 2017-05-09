@@ -573,6 +573,39 @@ void time_serial_mat_mult_int_trans() {
   free(dst);
 }
 
+void time_serial_mat_mult_int_naive() {
+  clock_t start, end;
+  double cpu_time_used;
+  int s1r = 11;
+  int s1c = 8;
+  int s2r = s1c;
+  int s2c = 9;
+  int *src1 = malloc(s1r * s1c * sizeof(int*));
+  int *src2 = malloc(s2r * s2c * sizeof(int*));
+  int *dst = malloc(s1r * s2c * sizeof(int*));
+  unsigned int i;
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < s1r; j++) {
+    for (k = 0; k < s1c; k++) {
+      src1[j*s1c+k] = 2*j+6*k;
+    }
+  }
+  for (j = 0; j < s2r; j++) {
+    for (k = 0; k < s2c; k++) {
+      src2[j*s2c+k] = 3*j-2*k;
+    }
+  }
+  start = clock();
+  mat_mult_int_serial_trans(dst, src1, src2, s1r, s1c, s2r, s2c);
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for serial mat int mult naive: %f\n", cpu_time_used);
+  free(src1);
+  free(src2);
+  free(dst);
+}
+
 int main() {
     time_serial_add_int();
     time_serial_sub_int();
@@ -593,5 +626,6 @@ int main() {
     time_serial_matmxn_trans_int();
     //time_serial_mat_mult_int();
     time_serial_mat_mult_int_trans();
+    time_serial_mat_mult_int_naive();
     return 0;
 }
