@@ -2,8 +2,8 @@
 #include "vec_math_vector.h"
 
 void vec_add_int_vector(int *dst, int *src1, int *src2, int len) {
-  unsigned int i;
-  for (i = 0; i < len; i += 4) {
+  int i;
+  for (i = 0; i < len-4; i += 4) {
     int32x4_t vec1;
     int32x4_t vec2;
     int32x4_t res;
@@ -11,6 +11,9 @@ void vec_add_int_vector(int *dst, int *src1, int *src2, int len) {
     vec2 = vld1q_s32(src2+i);
     res = vaddq_s32(vec1, vec2);
     vst1q_s32(dst+i, res);
+  }
+  for(; i < len; i++){
+        dst[i] = src1[i] + src2[i];
   }
 }
 

@@ -4,7 +4,7 @@
 #include "vec_math_vector.h"
 #include "vec_matrix_vector.h"
 
-#define LEN 10000000
+#define LEN 10000001
 
 void time_vector_add_int() {
   clock_t start, end;
@@ -326,6 +326,48 @@ void time_vector_dotproduct_int() {
   free(src2);
 }
 
+
+void time_vector_mat_mult_int_trans() {
+  clock_t start, end;
+  double cpu_time_used;
+  int s1r = 800;
+  int s1c = 1200;
+  int s2r = s1c;
+  int s2c = 600;
+  int *src1 = malloc(s1r * s1c * sizeof(int*));
+  int *src2 = malloc(s2r * s2c * sizeof(int*));
+  int *dst = malloc(s1r * s2c * sizeof(int*));
+  unsigned int i;
+  unsigned int j;
+  unsigned int k;
+  for (j = 0; j < s1r; j++) {
+    for (k = 0; k < s1c; k++) {
+      src1[j*s1c+k] = 2*j+6*k;
+    }
+  }
+  for (j = 0; j < s2r; j++) {
+    for (k = 0; k < s2c; k++) {
+      src2[j*s2c+k] = 3*j-2*k;
+    }
+  }
+  start = clock();
+  int_matrix_mul(dst, src1, src2, s1r, s2r, s2c);
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for vector mat int mult: %f\n", cpu_time_used);
+  /*
+  for (j = 0; j < s1r; j++) {
+    for (k = 0; k < s2c; k++) {
+      printf("%d ", dst[j*s2c + k]);
+    }
+    printf("\n");
+  }
+  */
+  free(src1);
+  free(src2);
+  free(dst);
+}
+
 int main() {
     /*
     time_vector_add_int();
@@ -338,7 +380,8 @@ int main() {
     time_vector_mat4x4_mult_int();
     time_vector_mat4x4_trans_int();
     time_vector_mat4x4_det_int();
-    */
     time_vector_dotproduct_int();
+*/
+    time_vector_mat_mult_int_trans();
     return 0;
 }

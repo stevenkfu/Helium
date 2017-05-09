@@ -1,6 +1,7 @@
 #include "vec_matrix_vector.h"
 #include "arm_neon.h"
 #include <stdio.h>
+#include "vec_math_vector.h"
 
 void int_matrix_mul_2x2(int* prod, int* m1, int* m2){
     
@@ -137,19 +138,70 @@ void matmxn_trans_int_serial_cache(int *dst, int *src, int rows, int cols, int r
   }
 }
 
-void int_matrix_mul(int* prod, int* m1, int* m2, int m, int n, int o){
-    int* m2_transpose = malloc(sizeof(int) * n * o);
-    matmxn_trans_int_serial_cache(m2_transpose, m2, n,o,0,n,0,o);
-    int i;
-    for(i = 0; i < m * o; i++){
-        int_dotprod(prod + i, m1 + (i / o * n), m2_transpose + (i % o * n), n);
+//assumes m2 is in col major order
+void int_matrix_mul_helper(int* prod, int* m1, int* m2, int m_orig, int n_orig, int o_orig,
+                    int m1_rb, int m1_re, int m1_cb, int m1_ce,
+                    int m2_rb, int m2_re, int m2_cb, int m2_ce){
+    int m = m1_re - m1_rb;
+    int n = m2_re - m2_rb;
+    int o = m2_ce - m2_cb;
+    int i,j;
+    if(m * n + n * o < 128000){
+        for(i = 0; i < m; i++){
+            for(j = 0; j < o; j++){ 
+                int_dotprod(prod + (i * o_orig) + j, m1 + ((i + m1_rb) * n_orig + m1_cb), m2 + ((j + m2_cb) * n_orig + m2_rb), n);
+            }
+        }
+        return;
     }
-    free (m2_transpose);
+    else if(n > m && n > o){
+        //cut n in half
+        //allocate temporary array to hold product of the two to sum them together
+        int* temp = malloc(sizeof(int) * m * o);
+        int_matrix_mul_helper(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_cb + n/2, 
+                       m2_rb, m2_rb + n/2, m2_cb, m2_ce);
+        int_matrix_mul_helper(temp, m1, m2, m, n_orig, o,
+                       m1_rb, m1_re, m1_cb + n/2, m1_ce,
+                       m2_rb + n/2, m2_re, m2_cb, m2_ce);
+        //sum together
+        for(i = 0; i < m; i++){
+           vec_add_int_vector(prod + i * o_orig, prod + i * o_orig, temp + i * o, o);
+        }
+        free(temp);
+        return;
+    }
+    else if(m > o){
+        //split m1 horizontally (cut m in half)
+        int_matrix_mul_helper(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_rb + m/2, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_ce);
+        int_matrix_mul_helper(prod + (m/2 * o_orig), m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb + m/2, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_ce);
+        return;
+    }
+    else{
+        //split m2 vertically (cut o in half)
+        int_matrix_mul_helper(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_cb + o/2);
+        int_matrix_mul_helper(prod + o/2, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb + o/2, m2_ce);
+        return;
+    }
+}
+
+void int_matrix_mul(int* dst, int* m1, int* m2, int m, int n, int o){
+    int* transposed_m2 = malloc(sizeof(int) * n * o);
+    matmxn_trans_int_serial_cache(transposed_m2, m2, n, o, 0, n, 0, o);
+    int_matrix_mul_helper(dst, m1, transposed_m2, m, n, o, 0, m, 0, n, 0, n, 0, o);
 }
 /*
-#define M 800
-#define N 1200
-#define O 1200
+#define M 5
+#define N 6
+#define O 3
 
 int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
     //int m[M * N];
@@ -160,12 +212,17 @@ int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
     for(i = 0; i < M * N; i++){
         m[i] = i;
     }
+    for(i = 0; i < N * O; i++){
+        n[i] = i;
+    }
+
     for(i = 0; i < N; i++){
         for(j = 0; j < O; j++){
-            n[i] = 0;
+            n[O * i + j] = 0;
             if(i == j) n[O * i + j] = 1;
         }
     }
+
     int prod[M*O];
     int_matrix_mul(prod, m, n, M, N, O);
     for(i = 0; i < M; i++){
