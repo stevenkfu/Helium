@@ -330,10 +330,10 @@ void time_vector_dotproduct_int() {
 void time_vector_mat_mult_int_trans() {
   clock_t start, end;
   double cpu_time_used;
-  int s1r = 500;
-  int s1c = 500;
+  int s1r = 2000;
+  int s1c = 2000;
   int s2r = s1c;
-  int s2c = 500;
+  int s2c = 2000;
   int *src1 = malloc(s1r * s1c * sizeof(int*));
   int *src2 = malloc(s2r * s2c * sizeof(int*));
   int *dst = malloc(s1r * s2c * sizeof(int*));
@@ -371,10 +371,10 @@ void time_vector_mat_mult_int_trans() {
 void time_vector_mat_mult_int_trans_fastandroid() {
   clock_t start, end;
   double cpu_time_used;
-  int s1r = 500;
-  int s1c = 500;
+  int s1r = 1000;
+  int s1c = 1000;
   int s2r = s1c;
-  int s2c = 500;
+  int s2c = 1000;
   int *src1 = malloc(s1r * s1c * sizeof(int*));
   int *src2 = malloc(s2r * s2c * sizeof(int*));
   int *dst = malloc(s1r * s2c * sizeof(int*));
@@ -427,6 +427,6 @@ int main() {
     time_vector_dotproduct_int();
 */
     time_vector_mat_mult_int_trans();
-    time_vector_mat_mult_int_trans_fastandroid();
+    //time_vector_mat_mult_int_trans_fastandroid();
     return 0;
 }

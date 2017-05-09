@@ -146,7 +146,7 @@ void int_matrix_mul_helper(int* prod, int* m1, int* m2, int m_orig, int n_orig, 
     int n = m2_re - m2_rb;
     int o = m2_ce - m2_cb;
     int i,j;
-    if(m * n + n * o < 128000){
+    if(m * n + n * o < 256000){
         for(i = 0; i < m; i++){
             for(j = 0; j < o; j++){ 
                 int_dotprod(prod + (i * o_orig) + j, m1 + ((i + m1_rb) * n_orig + m1_cb), m2 + ((j + m2_cb) * n_orig + m2_rb), n);
@@ -199,12 +199,53 @@ void int_matrix_mul(int* dst, int* m1, int* m2, int m, int n, int o){
     int_matrix_mul_helper(dst, m1, transposed_m2, m, n, o, 0, m, 0, n, 0, n, 0, o);
     free(transposed_m2);
 }
-/*
-#define M 5
+
+void mat_mult_int_serial_naive(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c) {
+  int i, j, k;
+  for (i = 0; i < s1r; i++) {
+    for (j = 0; j < s2c; j++) {
+      int sum = 0;
+      for (k = 0; k < s1c; k++) {
+        sum += src1[i*s1c+k] * src2[k*s2c+j];
+      }
+      dst[i*s2c+j] = sum;
+    }
+  }
+}
+
+void int_conv(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h){
+    int i,j,k,l;
+    for(i = 0; i < f_w * f_h; i++) printf("%d\t", filter[i]);
+    printf("\n\n");
+    int* temp_arr = malloc(sizeof(int) * w * h * f_w * f_h);
+    int f_h_diff = f_h/2;
+    int f_w_diff = f_w/2;
+    for(i = 0; i < h; i++){
+        for(j = 0; j < w; j++){
+            for(k = 0; k < f_h; k++){
+                for(l = 0; l < f_w; l++){
+                    int img_row = i + k - f_h_diff;
+                    int img_col = j + l - f_w_diff;
+                    if(img_row < 0 || img_row >= h || img_col < 0 || img_col >= w)
+                        temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)] = 0;
+                    else
+                        temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)] = src[img_row * w + img_col];
+                    printf("%d\t",temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)]);
+                }
+            }
+            printf("\n");
+        }
+    }
+    mat_mult_int_serial_naive(dst, temp_arr, filter, w * h,f_w * f_h, f_w * f_h, 1);
+    free(temp_arr);
+}
+#define M 6
 #define N 6
 #define O 3
+#define P 3
 
 int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
+    /*
     //int m[M * N];
     int* m = malloc(sizeof(int) * M * N);
     //int n[N * O];
@@ -234,6 +275,21 @@ int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
     }
     free(m);
     free(n);
+    */
+    int m[M*N];
+    int filter[O * P];
+    int i;
+    for(i = 0; i < M * N; i++){
+        m[i] = i;
+    }
+    for(i = 0; i < O * P; i++){
+        filter[i] = i;
+    }
+    int output[M * N];
+    int_conv(output, m, N, M, filter,O,P);
+    for(i = 0; i < M*N;i++){
+        printf("%d ", output[i]);
+        if(i % N == N - 1) printf("\n");
+    }
     return 0;
 }
-*/

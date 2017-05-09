@@ -161,7 +161,7 @@ void int_matrix_mul_helper(int* prod, int* m1, int* m2, int m_orig, int n_orig, 
     int n = m2_re - m2_rb;
     int o = m2_ce - m2_cb;
     int i,j;
-    if(m * n + n * o < 128000){
+    if(m * n + n * o < 256000){
         for(i = 0; i < m; i++){
             for(j = 0; j < o; j++){ 
                 int_dotprod(prod + (i * o_orig) + j, m1 + ((i + m1_rb) * n_orig + m1_cb), m2 + ((j + m2_cb) * n_orig + m2_rb), n);
