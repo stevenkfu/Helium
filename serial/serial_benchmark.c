@@ -606,6 +606,38 @@ void time_serial_mat_mult_int_naive() {
   free(dst);
 }
 
+#define M 100
+#define N 100
+#define O 10
+#define P 10
+
+void test_int_conv_serial() {
+  clock_t start, end;
+  double cpu_time_used;
+    int m[M*N];
+    int filter[O * P];
+    int i;
+    for(i = 0; i < M * N; i++){
+        m[i] = i;
+    }
+    for(i = 0; i < O * P; i++){
+        filter[i] = i;
+    }
+    int output[M * N];
+
+    start = clock();
+    int_conv_serial(output, m, N, M, filter,O,P);
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Time elapsed for conv: %f\n", cpu_time_used);
+    /*
+    for(i = 0; i < M*N;i++){
+        printf("%d ", output[i]);
+        if(i % N == N - 1) printf("\n");
+    }
+    */
+}
+
 int main() {
     /*
     time_serial_add_int();
@@ -627,7 +659,8 @@ int main() {
     time_serial_matmxn_trans_int();
     */
     //time_serial_mat_mult_int();
-    time_serial_mat_mult_int_trans();
-    time_serial_mat_mult_int_naive();
+    //time_serial_mat_mult_int_trans();
+    //time_serial_mat_mult_int_naive();
+    test_int_conv_serial();
     return 0;
 }

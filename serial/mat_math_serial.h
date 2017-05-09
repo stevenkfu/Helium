@@ -12,3 +12,4 @@ void matmxn_trans_int_serial(int *dst, int *src, int rows, int cols);
 void mat_mult_int_serial(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c);
 void mat_mult_int_serial_trans(int *dst, int *src, int *src2, int s1r, int s1c, int s2r, int s2c);
 void mat_mult_int_serial_naive(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c);
+void int_conv_serial(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h);

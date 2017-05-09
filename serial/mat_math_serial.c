@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "vec_math_serial.h"
+#include <stdio.h>
 
 void mat2x2_mult_int_serial(int *dst, int *src1, int *src2) {
   dst[0] = src1[0]*src2[0] + src1[1]*src2[2];
@@ -235,6 +236,26 @@ void mat_mult_int_serial_naive(int *dst, int *src1, int *src2, int s1r, int s1c,
         sum += src1[i*s1c+k] * src2[k*s2c+j];
       }
       dst[i*s2c+j] = sum;
+    }
+  }
+}
+
+void int_conv_serial(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h) {
+  int i, j, k, l;
+  int m, n;
+  for (i = 0; i < h; i++) {
+    for (j = 0; j < w; j++) {
+      int total = 0;
+      for (k = -f_h/2; k < f_h/2+1; k++) {
+        for (l = -f_w/2; l < f_w/2+1; l++) {
+          m = i + k;
+          n = j + l;
+          if (m >= 0 && m < h && n >= 0 && n < w) {
+            total += src[m*w+n] * filter[(k+f_h/2)*f_w+(l+f_w/2)];
+          }
+        }
+      }
+      dst[i*w+j] = total;
     }
   }
 }
