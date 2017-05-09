@@ -125,3 +125,36 @@ void matmxn_trans_int_serial(int *dst, int *src, int rows, int cols) {
     }
   }
 }
+
+void mat_mult_int_serial(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c) {
+  int i, j, k, l, m, n;
+  int blocksize = 2048;
+  for (i = 0; i < s2r; i += blocksize) {
+    for (j = 0; j < s2c; j += blocksize) {
+      for (k = 0; k < s1r; k++) {
+        for (m = j; m < s2c && m < j + blocksize; m++) {
+          int sum = 0;
+          for (n = i; n < s1c && m < i + blocksize; n++) {
+            sum += src1[k*s1c+n] * src2[n*s2c+m];
+          }
+          dst[k*s2c+m] = sum;
+        }
+      }
+    }
+  }
+}
+
+void mat_mult_int_serial_trans(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c) {
+  int *src2_trans = malloc(s2c*s2r*sizeof(int*));
+  matmxn_trans_int_serial_cache(src2_trans, src2, s2r, s2c, 0, s2r, 0, s2c);
+  int i, j, k;
+  for (i = 0; i < s1r; i++) {
+    for (j = 0; j < s2c; j++) {
+      int sum = 0;
+      for (k = 0; k < s2r; k++) {
+        sum += src1[i*s1c+k] * src2_trans[j*s2r+k];
+      }
+      dst[i*s2c+j] = sum;
+    }
+  }
+}
