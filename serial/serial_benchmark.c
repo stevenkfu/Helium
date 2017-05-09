@@ -559,7 +559,7 @@ void time_serial_mat_mult_int_trans() {
   mat_mult_int_serial_trans(dst, src1, src2, s1r, s1c, s2r, s2c);
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-  printf("Time elapsed for serial mat int mult: %f\n", cpu_time_used);
+  printf("Time elapsed for serial mat int mult trans: %f\n", cpu_time_used);
   /*
   for (j = 0; j < s1r; j++) {
     for (k = 0; k < s2c; k++) {

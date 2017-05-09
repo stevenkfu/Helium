@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "vec_math_serial.h"
 
 void mat2x2_mult_int_serial(int *dst, int *src1, int *src2) {
   dst[0] = src1[0]*src2[0] + src1[1]*src2[2];
@@ -144,9 +145,74 @@ void mat_mult_int_serial(int *dst, int *src1, int *src2, int s1r, int s1c, int s
   }
 }
 
+void int_dotprod(int *prod, int *v1, int *v2, int len) {
+  int sum = 0;
+  int i;
+  for (i = 0; i < len; i++) {
+    sum += v1[i] * v2[i];
+  }
+  *prod = sum;
+}
+
+void int_matrix_mul_helper(int* prod, int* m1, int* m2, int m_orig, int n_orig, int o_orig,
+                    int m1_rb, int m1_re, int m1_cb, int m1_ce,
+                    int m2_rb, int m2_re, int m2_cb, int m2_ce){
+    int m = m1_re - m1_rb;
+    int n = m2_re - m2_rb;
+    int o = m2_ce - m2_cb;
+    int i,j;
+    if(m * n + n * o < 128000){
+        for(i = 0; i < m; i++){
+            for(j = 0; j < o; j++){ 
+                int_dotprod(prod + (i * o_orig) + j, m1 + ((i + m1_rb) * n_orig + m1_cb), m2 + ((j + m2_cb) * n_orig + m2_rb), n);
+            }
+        }
+        return;
+    }
+    else if(n > m && n > o){
+        //cut n in half
+        //allocate temporary array to hold product of the two to sum them together
+        int* temp = malloc(sizeof(int) * m * o);
+        int_matrix_mul_helper(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_cb + n/2, 
+                       m2_rb, m2_rb + n/2, m2_cb, m2_ce);
+        int_matrix_mul_helper(temp, m1, m2, m, n_orig, o,
+                       m1_rb, m1_re, m1_cb + n/2, m1_ce,
+                       m2_rb + n/2, m2_re, m2_cb, m2_ce);
+        //sum together
+        for(i = 0; i < m; i++){
+           vec_add_int_serial(prod + i * o_orig, prod + i * o_orig, temp + i * o, o);
+        }
+        free(temp);
+        return;
+    }
+    else if(m > o){
+        //split m1 horizontally (cut m in half)
+        int_matrix_mul_helper(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_rb + m/2, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_ce);
+        int_matrix_mul_helper(prod + (m/2 * o_orig), m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb + m/2, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_ce);
+        return;
+    }
+    else{
+        //split m2 vertically (cut o in half)
+        int_matrix_mul_helper(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_cb + o/2);
+        int_matrix_mul_helper(prod + o/2, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb + o/2, m2_ce);
+        return;
+    }
+}
+
 void mat_mult_int_serial_trans(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c) {
   int *src2_trans = malloc(s2c*s2r*sizeof(int*));
   matmxn_trans_int_serial_cache(src2_trans, src2, s2r, s2c, 0, s2r, 0, s2c);
+  int_matrix_mul_helper(dst, src1, src2_trans, s1r, s1c, s2c, 0, s1r, 0, s1c, 0, s2r, 0, s2c);
+  /*
   int i, j, k;
   for (i = 0; i < s1r; i++) {
     for (j = 0; j < s2c; j++) {
@@ -157,4 +223,5 @@ void mat_mult_int_serial_trans(int *dst, int *src1, int *src2, int s1r, int s1c,
       dst[i*s2c+j] = sum;
     }
   }
+  */
 }
