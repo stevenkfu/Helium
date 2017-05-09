@@ -535,10 +535,10 @@ void time_serial_mat_mult_int() {
 void time_serial_mat_mult_int_trans() {
   clock_t start, end;
   double cpu_time_used;
-  int s1r = 800;
-  int s1c = 1200;
+  int s1r = 500;
+  int s1c = 500;
   int s2r = s1c;
-  int s2c = 600;
+  int s2c = 500;
   int *src1 = malloc(s1r * s1c * sizeof(int*));
   int *src2 = malloc(s2r * s2c * sizeof(int*));
   int *dst = malloc(s1r * s2c * sizeof(int*));
@@ -591,7 +591,7 @@ int main() {
     time_serial_mat4x4_det_int();
     time_serial_matmxn_trans_int_cache();
     time_serial_matmxn_trans_int();
-    time_serial_mat_mult_int();
+    //time_serial_mat_mult_int();
     time_serial_mat_mult_int_trans();
     return 0;
 }

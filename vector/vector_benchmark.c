@@ -3,7 +3,7 @@
 #include <time.h>
 #include "vec_math_vector.h"
 #include "vec_matrix_vector.h"
-
+#include "fastandroid.h"
 #define LEN 10000001
 
 void time_vector_add_int() {
@@ -330,10 +330,10 @@ void time_vector_dotproduct_int() {
 void time_vector_mat_mult_int_trans() {
   clock_t start, end;
   double cpu_time_used;
-  int s1r = 800;
-  int s1c = 1200;
+  int s1r = 500;
+  int s1c = 500;
   int s2r = s1c;
-  int s2c = 600;
+  int s2c = 500;
   int *src1 = malloc(s1r * s1c * sizeof(int*));
   int *src2 = malloc(s2r * s2c * sizeof(int*));
   int *dst = malloc(s1r * s2c * sizeof(int*));
@@ -368,6 +368,50 @@ void time_vector_mat_mult_int_trans() {
   free(dst);
 }
 
+void time_vector_mat_mult_int_trans_fastandroid() {
+  clock_t start, end;
+  double cpu_time_used;
+  int s1r = 500;
+  int s1c = 500;
+  int s2r = s1c;
+  int s2c = 500;
+  int *src1 = malloc(s1r * s1c * sizeof(int*));
+  int *src2 = malloc(s2r * s2c * sizeof(int*));
+  int *dst = malloc(s1r * s2c * sizeof(int*));
+  unsigned int i;
+  unsigned int j;
+  unsigned int k; 
+  for (j = 0; j < s1r; j++) { 
+    for (k = 0; k < s1c; k++) {
+      src1[j*s1c+k] = 2*j+6*k;
+    }
+  }
+  for (j = 0; j < s2r; j++) { 
+    for (k = 0; k < s2c; k++) {
+      src2[j*s2c+k] = 3*j-2*k;
+    }
+  }
+  start = clock();
+  int_matrix_mul(dst, src1, src2, s1r, s2r, s2c);
+  matrix_int_mul_block(src1, s1r, s1c, src2, s2r, s2c,dst);
+ 
+  end = clock();
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time elapsed for vector mat int mult fastandroid: %f\n", cpu_time_used);
+  /*
+  for (j = 0; j < s1r; j++) { 
+    for (k = 0; k < s2c; k++) { 
+      printf("%d ", dst[j*s2c + k]);
+    }
+    printf("\n");
+  }
+  */
+  free(src1);
+  free(src2);
+  free(dst);
+}
+
+
 int main() {
     /*
     time_vector_add_int();
@@ -383,5 +427,6 @@ int main() {
     time_vector_dotproduct_int();
 */
     time_vector_mat_mult_int_trans();
+    time_vector_mat_mult_int_trans_fastandroid();
     return 0;
 }
