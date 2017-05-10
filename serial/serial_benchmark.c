@@ -606,6 +606,7 @@ void time_serial_mat_mult_int_naive() {
   free(dst);
 }
 
+/*
 #define M 1024
 #define N 1024
 #define O 5
@@ -630,12 +631,55 @@ void test_int_conv_serial() {
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Time elapsed for conv: %f\n", cpu_time_used);
-    /*
     for(i = 0; i < M*N;i++){
         printf("%d ", output[i]);
         if(i % N == N - 1) printf("\n");
     }
+    free(m);
+}
+*/
+
+#define M 10
+#define N 10
+#define O 3
+#define P 3
+
+void test_float_conv_serial() {
+  clock_t start, end;
+  double cpu_time_used;
+    float* m = malloc(sizeof(float) * M * N);
+    float filter[O * P];
+    int i;
+    for(i = 0; i < M * N; i++){
+        m[i] = 1.0;
+    }
+    /*
+    for(i = 0; i < O * P; i++){
+        filter[i] = i * 0.1;
+    }
     */
+
+    filter[0] = 0.0751136;
+    filter[2] = 0.0751136;
+    filter[6] = 0.0751136;
+    filter[8] = 0.0751136;
+    filter[1] = 0.1238414;
+    filter[3] = 0.1238414;
+    filter[5] = 0.1238414;
+    filter[7] = 0.1238414;
+    filter[4] = 0.2041799;
+    
+    float output[M * N];
+
+    start = clock();
+    float_conv_serial(output, m, N, M, filter,O,P);
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Time elapsed for conv: %f\n", cpu_time_used);
+    for(i = 0; i < M*N;i++){
+        printf("%f ", output[i]);
+        if(i % N == N - 1) printf("\n");
+    }
     free(m);
 }
 
@@ -662,6 +706,7 @@ int main() {
     //time_serial_mat_mult_int();
     //time_serial_mat_mult_int_trans();
     //time_serial_mat_mult_int_naive();
-    test_int_conv_serial();
+    //test_int_conv_serial();
+    test_float_conv_serial();
     return 0;
 }

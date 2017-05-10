@@ -259,3 +259,23 @@ void int_conv_serial(int* dst, int* src, int w, int h, int* filter, int f_w, int
     }
   }
 }
+
+void float_conv_serial(float* dst, float* src, int w, int h, float* filter, int f_w, int f_h) {
+  int i, j, k, l;
+  int m, n;
+  for (i = 0; i < h; i++) {
+    for (j = 0; j < w; j++) {
+      float total = 0;
+      for (k = -f_h/2; k < f_h/2+1; k++) {
+        for (l = -f_w/2; l < f_w/2+1; l++) {
+          m = i + k;
+          n = j + l;
+          if (m >= 0 && m < h && n >= 0 && n < w) {
+            total += src[m*w+n] * filter[(k+f_h/2)*f_w+(l+f_w/2)];
+          }
+        }
+      }
+      dst[i*w+j] = total;
+    }
+  }
+}

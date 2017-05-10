@@ -13,3 +13,4 @@ void mat_mult_int_serial(int *dst, int *src1, int *src2, int s1r, int s1c, int s
 void mat_mult_int_serial_trans(int *dst, int *src, int *src2, int s1r, int s1c, int s2r, int s2c);
 void mat_mult_int_serial_naive(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c);
 void int_conv_serial(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h);
+void float_conv_serial(float* dst, float* src, int w, int h, float* filter, int f_w, int f_h);
