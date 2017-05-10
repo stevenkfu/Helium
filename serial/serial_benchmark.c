@@ -639,8 +639,8 @@ void test_int_conv_serial() {
 }
 */
 
-#define M 100
-#define N 100
+#define M 1000
+#define N 1000
 #define O 3
 #define P 3
 
@@ -648,7 +648,7 @@ void test_float_conv_serial() {
   clock_t start, end;
   double cpu_time_used;
     float* m = malloc(sizeof(float) * M * N);
-    float filter[O * P];
+    float filter[9] = {0.0751136,0.1238414,0.0751136,0.1238414,0.2041799,0.1238414,0.0751136,0.1238414,0.0751136};
     int i;
     for(i = 0; i < M * N; i++){
         m[i] = 1.0;
@@ -659,20 +659,11 @@ void test_float_conv_serial() {
     }
     */
 
-    filter[0] = 0.0751136;
-    filter[2] = 0.0751136;
-    filter[6] = 0.0751136;
-    filter[8] = 0.0751136;
-    filter[1] = 0.1238414;
-    filter[3] = 0.1238414;
-    filter[5] = 0.1238414;
-    filter[7] = 0.1238414;
-    filter[4] = 0.2041799;
     
     float output[M * N];
 
     start = clock();
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 2; i++) {
       float_conv_serial(output, m, N, M, filter,O,P);
     }
     end = clock();

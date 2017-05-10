@@ -410,8 +410,8 @@ void time_vector_mat_mult_int_trans_fastandroid() {
   free(src2);
   free(dst);
 }
-#define M 10
-#define N 10
+#define M 1000
+#define N 1000
 #define O 3
 #define P 3
 void test_int_conv() {
@@ -447,7 +447,7 @@ void test_float_conv_vector() {
   clock_t start, end;
   double cpu_time_used;
     float* m = malloc(sizeof(float) * M * N);
-    float filter[O * P];
+    float filter[9] = {0.0751136,0.1238414,0.0751136,0.1238414,0.2041799,0.1238414,0.0751136,0.1238414,0.0751136};
     int i;
     for(i = 0; i < M * N; i++){
         m[i] = 1.0;
@@ -458,27 +458,22 @@ void test_float_conv_vector() {
     }
     */
 
-    filter[0] = 0.0751136;
-    filter[2] = 0.0751136;
-    filter[6] = 0.0751136;
-    filter[8] = 0.0751136;
-    filter[1] = 0.1238414;
-    filter[3] = 0.1238414;
-    filter[5] = 0.1238414;
-    filter[7] = 0.1238414;
-    filter[4] = 0.2041799;
-
     float output[M * N];
-
+    float* temp = malloc(sizeof(float) * M * N * 9);
     start = clock();
-    float_conv(output, m, N, M, filter,O,P);
+    float_conv_setup(temp, m, N, M,O,P);
+    for(i = 0; i < 2; i++){
+        run_float_conv(output, temp, N, M, filter, O ,P);
+    }
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Time elapsed for conv: %f\n", cpu_time_used);
+    /*
     for(i = 0; i < M*N;i++){
         printf("%f ", output[i]);
         if(i % N == N - 1) printf("\n");
     }
+    */
     free(m);
 }
 

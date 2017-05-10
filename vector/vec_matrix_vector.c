@@ -337,6 +337,30 @@ void int_conv(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h){
     free(temp_arr);
 }
 
+void int_conv_setup(int* dst, int* src, int w, int h, int f_w, int f_h){
+    int i,j,k,l;
+    //for(i = 0; i < f_w * f_h; i++) printf("%d\t", filter[i]);
+    //printf("\n\n");
+    int f_h_diff = f_h/2;
+    int f_w_diff = f_w/2;
+    for(i = 0; i < h; i++){
+        for(j = 0; j < w; j++){ 
+            for(k = 0; k < f_h; k++){
+                for(l = 0; l < f_w; l++){ 
+                    int img_row = i + k - f_h_diff;
+                    int img_col = j + l - f_w_diff;
+                    if(img_row < 0 || img_row >= h || img_col < 0 || img_col >= w)
+                        dst[(i * w + j) * f_w * f_h + (k * f_w + l)] = 0;
+                    else
+                        dst[(i * w + j) * f_w * f_h + (k * f_w + l)] = src[img_row * w + img_col];
+      //              printf("%d\t",temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)]);
+                }
+            }
+        //    printf("\n");
+        }
+    }
+}
+
 void float_conv(float* dst, float* src, int w, int h, float* filter, int f_w, int f_h){
     int i,j,k,l;
     float* temp_arr = malloc(sizeof(float) * w * h * f_w * f_h);
@@ -354,7 +378,6 @@ void float_conv(float* dst, float* src, int w, int h, float* filter, int f_w, in
                         temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)] = src[img_row * w + img_col];
                 }
             }
-        //    printf("\n");
         }
     }
     clock_t start, end;
@@ -365,6 +388,34 @@ void float_conv(float* dst, float* src, int w, int h, float* filter, int f_w, in
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("shit took %f seconds\n", cpu_time_used);
     free(temp_arr);
+}
+
+void run_conv_int(int *dst, int* src_setup, int w, int h, int* filter, int f_w, int f_h){
+    int_matrix_mul(dst, src_setup, filter, w * h, f_w * f_h, 1);
+}
+
+void float_conv_setup(float* dst, float* src, int w, int h, int f_w, int f_h){
+    int i,j,k,l;
+    int f_h_diff = f_h/2;
+    int f_w_diff = f_w/2;
+    for(i = 0; i < h; i++){
+        for(j = 0; j < w; j++){
+            for(k = 0; k < f_h; k++){
+                for(l = 0; l < f_w; l++){
+                    int img_row = i + k - f_h_diff;
+                    int img_col = j + l - f_w_diff;
+                    if(img_row < 0 || img_row >= h || img_col < 0 || img_col >= w)
+                        dst[(i * w + j) * f_w * f_h + (k * f_w + l)] = 0;
+                    else
+                        dst[(i * w + j) * f_w * f_h + (k * f_w + l)] = src[img_row * w + img_col];
+                }
+            }
+        }
+    }
+}
+
+void run_float_conv(float* dst, float* src_setup, int w, int h, float* filter, int f_w, int f_h){
+    float_matrix_mul(dst, src_setup, filter, w * h, f_w * f_h, 1);
 }
 /*
 #define M 10
