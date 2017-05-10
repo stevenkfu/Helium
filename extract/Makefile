@@ -5,7 +5,7 @@ program_OBJS := $(program_C_OBJS)
 program_INCLUDE_DIRS :=
 program_LIBRARY_DIRS :=
 program_LIBRARIES :=
-CC := gcc
+CC := gcc -mfpu=neon
 
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
@@ -16,7 +16,7 @@ LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(CC) $(program_OBJS) -o $(program_NAME)
+	$(CC) $(program_OBJS) -o $(program_NAME) 
 
 clean:
 	@- $(RM) $(program_NAME)
