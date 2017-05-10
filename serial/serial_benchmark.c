@@ -606,15 +606,15 @@ void time_serial_mat_mult_int_naive() {
   free(dst);
 }
 
-#define M 100
-#define N 100
-#define O 10
-#define P 10
+#define M 1024
+#define N 1024
+#define O 5
+#define P 5
 
 void test_int_conv_serial() {
   clock_t start, end;
   double cpu_time_used;
-    int m[M*N];
+    int* m = malloc(sizeof(int) * M * N);
     int filter[O * P];
     int i;
     for(i = 0; i < M * N; i++){
@@ -636,6 +636,7 @@ void test_int_conv_serial() {
         if(i % N == N - 1) printf("\n");
     }
     */
+    free(m);
 }
 
 int main() {

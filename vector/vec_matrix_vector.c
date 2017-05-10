@@ -2,7 +2,7 @@
 #include "arm_neon.h"
 #include <stdio.h>
 #include "vec_math_vector.h"
-
+#include <time.h>
 void int_matrix_mul_2x2(int* prod, int* m1, int* m2){
     
     int i;
@@ -215,8 +215,8 @@ void mat_mult_int_serial_naive(int *dst, int *src1, int *src2, int s1r, int s1c,
 
 void int_conv(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h){
     int i,j,k,l;
-    for(i = 0; i < f_w * f_h; i++) printf("%d\t", filter[i]);
-    printf("\n\n");
+    //for(i = 0; i < f_w * f_h; i++) printf("%d\t", filter[i]);
+    //printf("\n\n");
     int* temp_arr = malloc(sizeof(int) * w * h * f_w * f_h);
     int f_h_diff = f_h/2;
     int f_w_diff = f_w/2;
@@ -230,22 +230,27 @@ void int_conv(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h){
                         temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)] = 0;
                     else
                         temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)] = src[img_row * w + img_col];
-                    printf("%d\t",temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)]);
+      //              printf("%d\t",temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)]);
                 }
             }
-            printf("\n");
+        //    printf("\n");
         }
     }
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();
     mat_mult_int_serial_naive(dst, temp_arr, filter, w * h,f_w * f_h, f_w * f_h, 1);
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("shit took %f seconds\n", cpu_time_used);
     free(temp_arr);
 }
-#define M 6
-#define N 6
-#define O 3
-#define P 3
-
+#define M 100
+#define N 100
+#define O 10
+#define P 10
+/*
 int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
-    /*
     //int m[M * N];
     int* m = malloc(sizeof(int) * M * N);
     //int n[N * O];
@@ -275,7 +280,6 @@ int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
     }
     free(m);
     free(n);
-    */
     int m[M*N];
     int filter[O * P];
     int i;
@@ -287,9 +291,6 @@ int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
     }
     int output[M * N];
     int_conv(output, m, N, M, filter,O,P);
-    for(i = 0; i < M*N;i++){
-        printf("%d ", output[i]);
-        if(i % N == N - 1) printf("\n");
-    }
     return 0;
 }
+*/

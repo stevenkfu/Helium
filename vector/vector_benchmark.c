@@ -410,7 +410,37 @@ void time_vector_mat_mult_int_trans_fastandroid() {
   free(src2);
   free(dst);
 }
+#define M 1024
+#define N 1024
+#define O 5
+#define P 5
+void test_int_conv() {
+  clock_t start, end;
+  double cpu_time_used;
+    int* m = malloc(sizeof(int) * M * N);
+    int filter[O * P];
+    int i;
+    for(i = 0; i < M * N; i++){
+        m[i] = i;
+    }
+    for(i = 0; i < O * P; i++){
+        filter[i] = i;
+    }
+    int output[M * N];
 
+    start = clock();
+    int_conv(output, m, N, M, filter,O,P);
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Time elapsed for conv: %f\n", cpu_time_used);
+    /*
+    for(i = 0; i < M*N;i++){
+        printf("%d ", output[i]);
+        if(i % N == N - 1) printf("\n");
+    }
+    */
+    free(m);
+}
 
 int main() {
     /*
@@ -426,7 +456,8 @@ int main() {
     time_vector_mat4x4_det_int();
     time_vector_dotproduct_int();
 */
-    time_vector_mat_mult_int_trans();
+ //   time_vector_mat_mult_int_trans();
     //time_vector_mat_mult_int_trans_fastandroid();
+    test_int_conv();
     return 0;
 }
