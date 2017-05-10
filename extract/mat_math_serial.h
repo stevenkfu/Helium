@@ -1,0 +1,16 @@
+void mat2x2_mult_int_serial(int *dst, int *src1, int *src2);
+void mat2x2_mult_float_serial(float *dst, float *src1, float *src2);
+void mat4x4_mult_int_serial(int *dst, int *src1, int *src2);
+void mat2x2_trans_int_serial(int *dst, int *src);
+void mat4x4_trans_int_serial(int *dst, int *src);
+void int_matrix_det_2x2(int* det, int* m);
+int mat2x2_inv_float_serial(float *dst, float *src);
+void int_matrix_det_4x4(int *det, int *m);
+void int_matrix_det_4x4_block(float *det, int *m);
+void matmxn_trans_int_serial_cache(int *dst, int *src, int rows, int cols, int rb, int re, int cb, int ce);
+void matmxn_trans_int_serial(int *dst, int *src, int rows, int cols);
+void mat_mult_int_serial(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c);
+void mat_mult_int_serial_trans(int *dst, int *src, int *src2, int s1r, int s1c, int s2r, int s2c);
+void mat_mult_int_serial_naive(int *dst, int *src1, int *src2, int s1r, int s1c, int s2r, int s2c);
+void int_conv_serial(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h);
+void float_conv_serial(float* dst, float* src, int w, int h, float* filter, int f_w, int f_h);
