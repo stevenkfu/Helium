@@ -639,8 +639,8 @@ void test_int_conv_serial() {
 }
 */
 
-#define M 10
-#define N 10
+#define M 100
+#define N 100
 #define O 3
 #define P 3
 
@@ -672,14 +672,18 @@ void test_float_conv_serial() {
     float output[M * N];
 
     start = clock();
-    float_conv_serial(output, m, N, M, filter,O,P);
+    for (i = 0; i < 5; i++) {
+      float_conv_serial(output, m, N, M, filter,O,P);
+    }
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Time elapsed for conv: %f\n", cpu_time_used);
+    /*
     for(i = 0; i < M*N;i++){
         printf("%f ", output[i]);
         if(i % N == N - 1) printf("\n");
     }
+    */
     free(m);
 }
 
