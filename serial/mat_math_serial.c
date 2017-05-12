@@ -91,7 +91,6 @@ void int_matrix_det_4x4(int *det, int *m) {
   return;
 }
 
-// Credits to http://stackoverflow.com/a/28027063
 void matmxn_trans_int_serial_cache(int *dst, int *src, int rows, int cols, int rb, int re, int cb, int ce) {
   int r = re - rb;
   int c = ce - cb;

@@ -137,7 +137,6 @@ void float_dotprod(float* prod, float* v1, float* v2, int len){
     *prod = sum;
 } 
 
-// Credits to http://stackoverflow.com/a/28027063
 void matmxn_trans_int_serial_cache(int *dst, int *src, int rows, int cols, int rb, int re, int cb, int ce) {
   int r = re - rb;
   int c = ce - cb;
