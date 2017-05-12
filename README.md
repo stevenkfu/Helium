@@ -1,3 +1,5 @@
+## Final Writeup: https://github.com/stevenkfu/Helium/blob/master/HeliumWriteup.pdf
+
 # Helium: On top of Neon
 ## Team Members: Steven Fu and Christopher Hung (skfu and christoh)
 
