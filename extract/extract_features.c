@@ -5,6 +5,92 @@
 #include <stdlib.h>
 #include <time.h>
 
+
+void float_dotprod_sequential(float *prod, float *v1, float *v2, int len) {
+  float sum = 0;
+  int i;
+  for (i = 0; i < len; i++) {
+    sum += v1[i] * v2[i];
+  }
+  *prod = sum;
+}
+
+void float_matrix_mul_helper_sequential(float* prod, float* m1, float* m2, int m_orig, int n_orig, int o_orig,
+                    int m1_rb, int m1_re, int m1_cb, int m1_ce,
+                    int m2_rb, int m2_re, int m2_cb, int m2_ce){
+    int m = m1_re - m1_rb;
+    int n = m2_re - m2_rb;
+    int o = m2_ce - m2_cb;
+    int i,j;
+    if(m * n + n * o < 128000){
+        for(i = 0; i < m; i++){
+            for(j = 0; j < o; j++){ 
+                float_dotprod_sequential(prod + (i * o_orig) + j, m1 + ((i + m1_rb) * n_orig + m1_cb), m2 + ((j + m2_cb) * n_orig + m2_rb), n);
+            }
+        }
+        return;
+    }
+    else if(n > m && n > o){
+        //cut n in half
+        //allocate temporary array to hold product of the two to sum them together
+        float* temp = (float*)malloc(sizeof(float) * m * o);
+        float_matrix_mul_helper_sequential(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_cb + n/2, 
+                       m2_rb, m2_rb + n/2, m2_cb, m2_ce);
+        float_matrix_mul_helper_sequential(temp, m1, m2, m, n_orig, o,
+                       m1_rb, m1_re, m1_cb + n/2, m1_ce,
+                       m2_rb + n/2, m2_re, m2_cb, m2_ce);
+        //sum together
+        for(i = 0; i < m; i++){
+           vec_add_float_serial(prod + i * o_orig, prod + i * o_orig, temp + i * o, o);
+        }
+        free(temp);
+        return;
+    }
+    else if(m > o){
+        //split m1 horizontally (cut m in half)
+        float_matrix_mul_helper_sequential(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_rb + m/2, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_ce);
+        float_matrix_mul_helper_sequential(prod + (m/2 * o_orig), m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb + m/2, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_ce);
+        return;
+    }
+    else{
+        //split m2 vertically (cut o in half)
+        float_matrix_mul_helper_sequential(prod, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb, m2_cb + o/2);
+        float_matrix_mul_helper_sequential(prod + o/2, m1, m2, m_orig, n_orig, o_orig,
+                       m1_rb, m1_re, m1_cb, m1_ce,
+                       m2_rb, m2_re, m2_cb + o/2, m2_ce);
+        return;
+    }
+}
+
+void mat_mult_float_serial_trans(float *dst, float *src1, float *src2, int s1r, int s1c, int s2r, int s2c) {
+  float *src2_trans = (float*)malloc(s2c*s2r*sizeof(float));
+  matmxn_trans_float_serial_cache(src2_trans, src2, s2r, s2c, 0, s2r, 0, s2c);
+  float_matrix_mul_helper_sequential(dst, src1, src2_trans, s1r, s1c, s2c, 0, s1r, 0, s1c, 0, s2r, 0, s2c);
+  /*
+  int i, j, k;
+  for (i = 0; i < s1r; i++) {
+    for (j = 0; j < s2c; j++) {
+      int sum = 0;
+      for (k = 0; k < s2r; k++) {
+        sum += src1[i*s1c+k] * src2_trans[j*s2r+k];
+      }
+      dst[i*s2c+j] = sum;
+    }
+  }
+  */
+}
+
+void run_float_conv_serial(float* dst, float* src_setup, int w, int h, float* filter, int f_w, int f_h){
+    mat_mult_float_serial_trans(dst, src_setup, filter, w * h, f_w * f_h, f_w * f_h, 1);
+}
+
 void extractSerial(const char* filename)
 {
   unsigned error;
@@ -60,10 +146,12 @@ void extractSerial(const char* filename)
   float output_gaus_v[width*height];
   float output_gaus_h[width*height];
   start = clock();
-  float_conv_serial(output_gaus, gray, height, width, filter_gaussian, 7, 7);
-  float_conv_serial(output_log, gray, height, width, filter_log, 7, 7);
-  float_conv_serial(output_gaus_v, gray, height, width, filter_gaussian_v, 7, 7);
-  float_conv_serial(output_gaus_h, gray, height, width, filter_gaussian_h, 7, 7);
+  for(i = 0; i < 1; i++){
+    float_conv_serial(output_gaus, gray, height, width, filter_gaussian, 7, 7);
+    //float_conv_serial(output_log, gray, height, width, filter_log, 7, 7);
+    //float_conv_serial(output_gaus_v, gray, height, width, filter_gaussian_v, 7, 7);
+    //float_conv_serial(output_gaus_h, gray, height, width, filter_gaussian_h, 7, 7);
+  }
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("Time elapsed for 4 filters serial: %f\n", cpu_time_used);
@@ -205,10 +293,12 @@ void extractVector(const char* filename)
   start = clock();
   float* temp = malloc(sizeof(float) * width * height * 49);
   float_conv_setup(temp, gray, height, width, 7,7);
-  run_float_conv(output_gaus, temp, height, width, filter_gaussian, 7, 7);
-  run_float_conv(output_log, temp, height, width, filter_log, 7, 7);
-  run_float_conv(output_gaus_v, temp, height, width, filter_gaussian_v, 7, 7);
-  run_float_conv(output_gaus_h, temp, height, width, filter_gaussian_h, 7, 7);
+  for(i = 0; i < 1; i++){
+    run_float_conv(output_gaus, temp, height, width, filter_gaussian, 7, 7);
+    //run_float_conv_serial(output_log, temp, height, width, filter_log, 7, 7);
+    //run_float_conv_serial(output_gaus_v, temp, height, width, filter_gaussian_v, 7, 7);
+    //run_float_conv_serial(output_gaus_h, temp, height, width, filter_gaussian_h, 7, 7);
+  }
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("Time elapsed for 4 filters vector: %f\n", cpu_time_used);
