@@ -305,8 +305,6 @@ void float_matrix_mul(float* dst, float* m1, float* m2, int m, int n, int o){
 
 void int_conv(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h){
     int i,j,k,l;
-    //for(i = 0; i < f_w * f_h; i++) printf("%d\t", filter[i]);
-    //printf("\n\n");
     int* temp_arr = malloc(sizeof(int) * w * h * f_w * f_h);
     int f_h_diff = f_h/2;
     int f_w_diff = f_w/2;
@@ -320,10 +318,8 @@ void int_conv(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h){
                         temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)] = 0;
                     else
                         temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)] = src[img_row * w + img_col];
-      //              printf("%d\t",temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)]);
                 }
             }
-        //    printf("\n");
         }
     }
     clock_t start, end;
@@ -332,14 +328,12 @@ void int_conv(int* dst, int* src, int w, int h, int* filter, int f_w, int f_h){
     int_matrix_mul(dst, temp_arr, filter, w * h, f_w * f_h, 1);
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("shit took %f seconds\n", cpu_time_used);
+    printf("multiply took %f seconds\n", cpu_time_used);
     free(temp_arr);
 }
 
 void int_conv_setup(int* dst, int* src, int w, int h, int f_w, int f_h){
     int i,j,k,l;
-    //for(i = 0; i < f_w * f_h; i++) printf("%d\t", filter[i]);
-    //printf("\n\n");
     int f_h_diff = f_h/2;
     int f_w_diff = f_w/2;
     for(i = 0; i < h; i++){
@@ -352,10 +346,8 @@ void int_conv_setup(int* dst, int* src, int w, int h, int f_w, int f_h){
                         dst[(i * w + j) * f_w * f_h + (k * f_w + l)] = 0;
                     else
                         dst[(i * w + j) * f_w * f_h + (k * f_w + l)] = src[img_row * w + img_col];
-      //              printf("%d\t",temp_arr[(i * w + j) * f_w * f_h + (k * f_w + l)]);
                 }
             }
-        //    printf("\n");
         }
     }
 }
@@ -385,7 +377,7 @@ void float_conv(float* dst, float* src, int w, int h, float* filter, int f_w, in
     float_matrix_mul(dst, temp_arr, filter, w * h, f_w * f_h, 1);
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("shit took %f seconds\n", cpu_time_used);
+    printf("multiply took %f seconds\n", cpu_time_used);
     free(temp_arr);
 }
 
@@ -416,30 +408,3 @@ void float_conv_setup(float* dst, float* src, int w, int h, int f_w, int f_h){
 void run_float_conv(float* dst, float* src_setup, int w, int h, float* filter, int f_w, int f_h){
     float_matrix_mul(dst, src_setup, filter, w * h, f_w * f_h, 1);
 }
-/*
-#define M 10
-#define N 10
-#define O 3
-#define P 3
-int main(){//({5,1,25,2},{61,5,12,3},{15,52,32,5},{17,8246,44,2})
-    float m[M*N];
-    float filter[O * P];
-    int i;
-    for(i = 0; i < M * N; i++){
-        m[i] = 1.0;
-    }
-    for(i = 0; i < O * P; i++){
-        filter[i] = 1.0;
-    }
-    float output[M * N];
-    float_conv(output, m, N, M, filter,O,P);
-    int j;
-    for(i = 0; i < M; i++){
-        for(j = 0; j < N; j++){
-            printf("%f ", output[N * i + j]);
-        }
-        printf("\n");
-    }
-    return 0;
-}
-*/

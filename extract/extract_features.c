@@ -106,10 +106,8 @@ void extractSerial(const char* filename)
   int i,j;
   for (i = 0; i < height; i += 1) {
     for (j = 0; j < width * 4; j += 4) {
-      //printf("%d %d %d %d\n", image[i*(width*4)+j], image[i*(width*4)+j+1], image[i*(width*4)+j+2], image[i*(width*4)+j+3]);
       gray[i*width+(j/4)] = 0.2989 * (float)(image[i*(width*4)+j]) + 0.5870 * (float)(image[i*(width*4)+j+1]) + 0.1140 * (float)(image[i*(width*4)+j+2]);
     }
-    //printf("\n");
   }
 
   float filter_gaussian[49] = {.0000196519161240319,0.000239409349497270,0.00107295826497866,0.00176900911404382,0.00107295826497866,0.000239409349497270,.0000196519161240319,
@@ -146,11 +144,11 @@ void extractSerial(const char* filename)
   float output_gaus_v[width*height];
   float output_gaus_h[width*height];
   start = clock();
-  for(i = 0; i < 1; i++){
+  for(i = 0; i < 2; i++){
     float_conv_serial(output_gaus, gray, height, width, filter_gaussian, 7, 7);
-    //float_conv_serial(output_log, gray, height, width, filter_log, 7, 7);
-    //float_conv_serial(output_gaus_v, gray, height, width, filter_gaussian_v, 7, 7);
-    //float_conv_serial(output_gaus_h, gray, height, width, filter_gaussian_h, 7, 7);
+    float_conv_serial(output_log, gray, height, width, filter_log, 7, 7);
+    float_conv_serial(output_gaus_v, gray, height, width, filter_gaussian_v, 7, 7);
+    float_conv_serial(output_gaus_h, gray, height, width, filter_gaussian_h, 7, 7);
   }
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -251,10 +249,8 @@ void extractVector(const char* filename)
   int i,j;
   for (i = 0; i < height; i += 1) {
     for (j = 0; j < width * 4; j += 4) {
-      //printf("%d %d %d %d\n", image[i*(width*4)+j], image[i*(width*4)+j+1], image[i*(width*4)+j+2], image[i*(width*4)+j+3]);
       gray[i*width+(j/4)] = 0.2989 * (float)(image[i*(width*4)+j]) + 0.5870 * (float)(image[i*(width*4)+j+1]) + 0.1140 * (float)(image[i*(width*4)+j+2]);
     }
-    //printf("\n");
   }
 
   float filter_gaussian[49] = {.0000196519161240319,0.000239409349497270,0.00107295826497866,0.00176900911404382,0.00107295826497866,0.000239409349497270,.0000196519161240319,
@@ -293,11 +289,11 @@ void extractVector(const char* filename)
   start = clock();
   float* temp = malloc(sizeof(float) * width * height * 49);
   float_conv_setup(temp, gray, height, width, 7,7);
-  for(i = 0; i < 1; i++){
-    run_float_conv(output_gaus, temp, height, width, filter_gaussian, 7, 7);
-    //run_float_conv_serial(output_log, temp, height, width, filter_log, 7, 7);
-    //run_float_conv_serial(output_gaus_v, temp, height, width, filter_gaussian_v, 7, 7);
-    //run_float_conv_serial(output_gaus_h, temp, height, width, filter_gaussian_h, 7, 7);
+  for(i = 0; i < 2; i++){
+    run_float_conv_serial(output_gaus, temp, height, width, filter_gaussian, 7, 7);
+    run_float_conv_serial(output_log, temp, height, width, filter_log, 7, 7);
+    run_float_conv_serial(output_gaus_v, temp, height, width, filter_gaussian_v, 7, 7);
+    run_float_conv_serial(output_gaus_h, temp, height, width, filter_gaussian_h, 7, 7);
   }
   end = clock();
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
