@@ -478,7 +478,6 @@ void test_float_conv_vector() {
 }
 
 int main() {
-    /*
     time_vector_add_int();
     time_vector_sub_int();
     time_vector_mul_int();
@@ -490,10 +489,8 @@ int main() {
     time_vector_mat4x4_trans_int();
     time_vector_mat4x4_det_int();
     time_vector_dotproduct_int();
-*/
- //   time_vector_mat_mult_int_trans();
-    //time_vector_mat_mult_int_trans_fastandroid();
-    //test_int_conv();
+    time_vector_mat_mult_int_trans();
+    test_int_conv();
     test_float_conv_vector();
     return 0;
 }
